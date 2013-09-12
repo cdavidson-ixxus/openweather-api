@@ -1,3 +1,28 @@
+
+function myFunction()
+{
+alert("Hello World!");
+}
+var weekday=new Array(7);
+weekday[0]="Sunday";
+weekday[1]="Monday";
+weekday[2]="Tuesday";
+weekday[3]="Wednesday";
+weekday[4]="Thursday";
+weekday[5]="Friday";
+weekday[6]="Saturday";
+
+function workOutDay(){
+	var today = new Date();
+	console.log(today.getTime());
+	console.log(weekday[today.getDay()]);
+	//find saturday
+	var diff = 6 - today.getDay()
+	var saturday = new Date();
+	saturday.setDate(today.getDate() + diff);
+	console.log(saturday.getDate());
+}
+
 SimpleSample = {};
 
 SimpleSample.Person = Backbone.Model.extend({});
@@ -64,7 +89,9 @@ SimpleSample.App = function(){
 		
 		$.getJSON('http://api.openweathermap.org/data/2.5/forecast?q=London,uk&callback=?', function(data) { 
 			console.log(data); 
+			$('#weather').html(JSON.stringify(data,null , 2));
 		});
+		workOutDay();
         
         /*var weather = new SimpleSample.WeatherData();
         weather.fetch({
@@ -84,5 +111,5 @@ SimpleSample.App = function(){
 $(function(){
     var app = new SimpleSample.App();
     app.start();
-})
-    
+});
+
