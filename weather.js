@@ -12,15 +12,15 @@ weekday[4]="Thursday";
 weekday[5]="Friday";
 weekday[6]="Saturday";
 
+var saturday;
+var convertToMPH = 2.2369362920544;
 function workOutDay(){
 	var today = new Date();
-	console.log(today.getTime());
-	console.log(weekday[today.getDay()]);
+	console.log("Today is " + weekday[today.getDay()]);
 	//find saturday
 	var diff = 6 - today.getDay()
-	var saturday = new Date();
+	saturday = new Date();
 	saturday.setDate(today.getDate() + diff);
-	console.log(saturday.getDate());
 }
 
 SimpleSample = {};
@@ -87,9 +87,26 @@ SimpleSample.App = function(){
 			console.log(data); 
 		});*/
 		
-		$.getJSON('http://api.openweathermap.org/data/2.5/forecast?q=London,uk&callback=?', function(data) { 
-			console.log(data); 
-			$('#weather').html(JSON.stringify(data,null , 2));
+		$.getJSON('http://api.openweathermap.org/data/2.5/forecast?q=tonbridge,uk&callback=?', function(data) { 
+			workOutDay();
+			var weather = "";
+			for(var i = 0 ; i < data.list.length ; i++){
+				var date = new Date(data.list[i].dt*1000);
+				if(saturday.getDate() == date.getDate()){
+					weather += date.toString() + "<br/>";
+					weather += "Wind " + data.list[i].wind.deg + " degrees " + (data.list[i].wind.speed*convertToMPH).toFixed(2) + "mph" + "<br/>";
+					for(var j = 0 ; j < data.list[i].weather.length ; j++){
+						weather += "Weather " + data.list[i].weather[j].description + "<br/>";
+					}
+					if(data.list[i].rain){
+						weather += "Rain " + data.list[i].rain['3h'] + "<br/>";
+					}
+					weather += "<hr/>";
+				}
+				
+			}
+			$('#weather').html(weather);
+			//$('#weather').html(JSON.stringify(data,null , 2));
 		});
 		workOutDay();
         
